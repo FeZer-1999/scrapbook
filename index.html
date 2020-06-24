@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+        <link rel="stylesheet" href="style.css">
+        <title>Scrapbook</title>
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+            <a class="navbar-brand" href="#">Scrapbook</a>
+        </nav>
+
+        <main role="main">
+            <div class="jumbotron">
+                <div class="container d-flex flex-column align-items-center">
+                    <h3 class="font-weight-bold">
+                        Mural de recados - Deixe sua mensagem
+                    </h3>
+
+                    <div class="col-md-6">
+                        <label for="messageTitle" class="font-weight-bold">Título:</label>
+                        <input type="text" class="form-control" id="messageTitle" placeholder="Digite o título da mensagem">
+                    
+                        <label for="messageBody" class="font-weight-bold">Mensagem:</label>
+                        <textarea id="messageBody" class="form-control" cols="30" rows="5"></textarea>
+                        <button type="button" class="btn btn-dark w-100 mt-3" onclick="add()">Adicionar</button>
+                    </div>
+                    
+                    <div id="scrapsField" class="d-flex flex-wrap mt-5">
+                        
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <script>
+                       
+            let scrapsField = document.getElementById("scrapsField");
+            
+            let recados = JSON.parse(localStorage.getItem("lista_recados")) || [];
+             
+            function criarBox() {
+                scrapsField.innerHTML = "";
+                              
+                for (let i = 0; i < recados.length; i++) {
+                    let card = document.createElement("div");
+                    card.setAttribute("class", "card text-white bg-dark m-2 align-items-center");
+                    
+                    let title = document.createElement("div");
+                    title.setAttribute("class", "card-header");
+
+                    let cardBody = document.createElement("div");
+                    cardBody.setAttribute("class", "card-body");
+
+                    let mensagem = document.createElement("p");
+                    mensagem.setAttribute("class", "card-text");
+
+                    let recebeVetorMensagem = document.createTextNode(recados[i].mensagem)
+                    let recebeVetorTitulo = document.createTextNode(recados[i].titulo)
+                
+                    title.appendChild(recebeVetorTitulo)
+                    card.appendChild(title)
+                    mensagem.appendChild(recebeVetorMensagem)
+                    cardBody.appendChild(mensagem)
+                    card.appendChild(cardBody)
+                    scrapsField.appendChild(card);
+                }
+            }    
+            criarBox();
+
+            function add() {
+                
+                let titulo = document.getElementById("messageTitle");
+                let mensagem = document.getElementById("messageBody");
+
+                let recebeTitulo = titulo.value;
+                let recebeMensagem = mensagem.value;
+                
+                if (recebeTitulo === "" || recebeMensagem === "") {
+                    alert("Preencha todos os campos")
+                }
+                else {
+                    recados.push({titulo: recebeTitulo, mensagem: recebeMensagem})
+                }
+                criarBox();
+                salvarNoStorage()
+            }
+
+            function salvarNoStorage() {
+                localStorage.setItem('lista_recados', JSON.stringify(recados));
+            }
+                     
+        </script>
+    </body>
+</html>
