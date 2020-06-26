@@ -46,7 +46,7 @@
                               
                 for (let i = 0; i < recados.length; i++) {
                     let card = document.createElement("div");
-                    card.setAttribute("class", "card text-white bg-dark m-2 align-items-center");
+                    card.setAttribute("class", "message-cards card text-white bg-dark m-2 align-items-center");
                     
                     let title = document.createElement("div");
                     title.setAttribute("class", "card-header");
@@ -59,12 +59,23 @@
 
                     let recebeVetorMensagem = document.createTextNode(recados[i].mensagem)
                     let recebeVetorTitulo = document.createTextNode(recados[i].titulo)
+
+                    let buttonElement = document.createElement("button");
+
+                    let position = recados.indexOf(i);
+                    buttonElement.setAttribute("class", "btn btn-outline-light")
+                    buttonElement.setAttribute('onclick', `deletarBox(${position})`);
+
+                    let buttonText = document.createTextNode("Excluir");
+
+                    buttonElement.appendChild(buttonText);
                 
                     title.appendChild(recebeVetorTitulo)
                     card.appendChild(title)
                     mensagem.appendChild(recebeVetorMensagem)
                     cardBody.appendChild(mensagem)
                     card.appendChild(cardBody)
+                    card.appendChild(buttonElement)
                     scrapsField.appendChild(card);
                 }
             }    
@@ -77,7 +88,7 @@
 
                 let recebeTitulo = titulo.value;
                 let recebeMensagem = mensagem.value;
-                
+
                 if (recebeTitulo === "" || recebeMensagem === "") {
                     alert("Preencha todos os campos")
                 }
@@ -87,9 +98,18 @@
                 criarBox();
                 salvarNoStorage()
             }
-
+            
             function salvarNoStorage() {
                 localStorage.setItem('lista_recados', JSON.stringify(recados));
+            }
+
+            function deletarBox(position) {
+                recados.splice(position, 1);
+
+                scrapsField.innerHTML = "";
+                
+                criarBox()
+                salvarNoStorage()
             }
                      
         </script>
